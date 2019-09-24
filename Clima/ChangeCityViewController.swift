@@ -10,12 +10,16 @@ import UIKit
 
 
 //Write the protocol declaration here:
+protocol ChangeCityViewDelegate {
+    func cityChanged(city: String)
+}
 
 
 
 class ChangeCityViewController: UIViewController {
     
     //Declare the delegate variable here:
+    var delegate : ChangeCityViewDelegate? = nil
 
     
     //This is the pre-linked IBOutlets to the text field:
@@ -28,9 +32,14 @@ class ChangeCityViewController: UIViewController {
         
         
         //1 Get the city name the user entered in the text field
+        guard let cityTxt = changeCityTextField.text, let delUnw = delegate  else { return  }
         
         
         //2 If we have a delegate set, call the method userEnteredANewCityName
+        if !cityTxt.isEmpty{
+            let change = cityTxt.replacingOccurrences(of: " ", with: "")
+            delUnw.cityChanged(city: change)
+        }
         
         
         //3 dismiss the Change City View Controller to go back to the WeatherViewController

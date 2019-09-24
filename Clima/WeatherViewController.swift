@@ -84,8 +84,9 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     func updateWeatherData(response: Data){
         let json = try! JSON(data: response)
         currWeaData = WeatherDataModel(ciudad: json["name"].stringValue, temp: json["main"]["temp"].doubleValue-273, condition: json["weather"][0]["id"].intValue)
-       print(json)
-      print(currWeaData?.temp)
+      //	print(json)
+      //print(currWeaData?.temp)
+        updateUIWeatherData()
         
         
     }
@@ -102,14 +103,13 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
         if let currcond = currWeaData?.condition, let currcity = currWeaData?.ciudad, let currtemp = currWeaData?.temp{
             weatherIcon.image=UIImage(named:currcond)
             cityLabel.text=currcity
-            temperatureLabel.text="\(currtemp)"
+            temperatureLabel.text = String(format: "%.0f", currtemp)
             
         }
       
         
         
     }
-    
     
     
     
@@ -154,6 +154,11 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
 
     
     //Write the PrepareForSegue Method here
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destVC = segue.destination as? ChangeCityViewController{
+            destVC.delegate = self
+        }
+    }
     
     
     
