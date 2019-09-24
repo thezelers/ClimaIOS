@@ -7,9 +7,17 @@
 //
 
 import UIKit
+import Alamofire
+import SwiftyJSON
+import CoreLocation
 
 
-class WeatherViewController: UIViewController {
+
+
+	
+
+
+class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     
     //Constants
     let WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather"
@@ -18,8 +26,9 @@ class WeatherViewController: UIViewController {
 
     //TODO: Declare instance variables here
     
+    let locmang = CLLocationManager()
+    var currWeaData : WeatherDataModel?
 
-    
     //Pre-linked IBOutlets
     @IBOutlet weak var weatherIcon: UIImageView!
     @IBOutlet weak var cityLabel: UILabel!
@@ -31,6 +40,11 @@ class WeatherViewController: UIViewController {
         
         
         //TODO:Set up the location manager here.
+        
+        locmang.delegate = self
+        locmang.desiredAccuracy = kCLLocationAccuracyKilometer
+        locmang.requestWhenInUseAuthorization()
+        locmang.startUpdatingLocation()
     
         
         
@@ -42,6 +56,18 @@ class WeatherViewController: UIViewController {
     /***************************************************************/
     
     //Write the getWeatherData method here:
+    func getWeatherData(url : String) {
+        Alamofire.request(url, method: .get, encoding: JSONEncoding.default, headers: nil).responseJSON { (respuesta) in
+            respuesta.result.ifSuccess{
+                if let data =  respuesta.data{
+               self.updateWeatherData(response: data)
+            }
+            }
+    
+            
+            
+        }
+    }
     
 
     
@@ -55,7 +81,14 @@ class WeatherViewController: UIViewController {
     
     //Write the updateWeatherData method here:
     
-
+    func updateWeatherData(response: Data){
+        let json = try! JSON(data: response)
+        currWeaData = WeatherDataModel(ciudad: json["name"].stringValue, temp: json["main"]["temp"].doubleValue-273, condition: json["weather"][0]["id"].intValue)
+       print(json)
+      print(currWeaData?.temp)
+        
+        
+    }
     
     
     
@@ -65,7 +98,17 @@ class WeatherViewController: UIViewController {
     
     //Write the updateUIWithWeatherData method here:
     
-    
+    func updateUIWeatherData(){
+        if let currcond = currWeaData?.condition, let currcity = currWeaData?.ciudad, let currtemp = currWeaData?.temp{
+            weatherIcon.image=UIImage(named:currcond)
+            cityLabel.text=currcity
+            temperatureLabel.text="\(currtemp)"
+            
+        }
+      
+        
+        
+    }
     
     
     
@@ -75,6 +118,24 @@ class WeatherViewController: UIViewController {
     
     
     //Write the didUpdateLocations method here:
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        // print (locmang.location?.coordinate)
+        let localitatio = locations[locations.count - 1]
+         guard let location = locmang.location
+            else {
+                return
+        }
+       print(location)
+        
+        if localitatio.horizontalAccuracy > 0{
+            locmang.stopUpdatingLocation()
+            let lat = location.coordinate.latitude
+            let long = location.coordinate.longitude
+            let ulr = WEATHER_URL + "?lat=\(lat)&lon=\(long)&appid=\(APP_ID)"
+            getWeatherData(url: ulr)
+        }
+    }
     
     
     
