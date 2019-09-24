@@ -11,7 +11,7 @@ import UIKit
 
 //Write the protocol declaration here:
 protocol ChangeCityViewDelegate {
-    func cityChanged(city: String)
+    func userEnteredANewCityName(city: String)
 }
 
 
@@ -27,7 +27,7 @@ class ChangeCityViewController: UIViewController {
 
     
     //This is the IBAction that gets called when the user taps on the "Get Weather" button:
-    @IBAction func getWeatherPressed(_ sender: AnyObject) {
+    @IBAction func getWeatherPressed(_ sender: AnyObject) {		
         
         
         
@@ -38,12 +38,13 @@ class ChangeCityViewController: UIViewController {
         //2 If we have a delegate set, call the method userEnteredANewCityName
         if !cityTxt.isEmpty{
             let change = cityTxt.replacingOccurrences(of: " ", with: "")
-            delUnw.cityChanged(city: change)
-        }
+            delUnw.userEnteredANewCityName(city: change)
+        
         
         
         //3 dismiss the Change City View Controller to go back to the WeatherViewController
-        
+        self.dismiss(animated: true, completion: nil)
+        }
         
     }
     

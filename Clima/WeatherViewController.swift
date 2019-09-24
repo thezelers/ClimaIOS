@@ -17,7 +17,7 @@ import CoreLocation
 	
 
 
-class WeatherViewController: UIViewController, CLLocationManagerDelegate {
+class WeatherViewController: UIViewController, CLLocationManagerDelegate, ChangeCityViewDelegate {
     
     //Constants
     let WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather"
@@ -57,6 +57,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     
     //Write the getWeatherData method here:
     func getWeatherData(url : String) {
+        print(url)
         Alamofire.request(url, method: .get, encoding: JSONEncoding.default, headers: nil).responseJSON { (respuesta) in
             respuesta.result.ifSuccess{
                 if let data =  respuesta.data{
@@ -84,8 +85,8 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     func updateWeatherData(response: Data){
         let json = try! JSON(data: response)
         currWeaData = WeatherDataModel(ciudad: json["name"].stringValue, temp: json["main"]["temp"].doubleValue-273, condition: json["weather"][0]["id"].intValue)
-      //	print(json)
-      //print(currWeaData?.temp)
+      	print(json)
+        print(currWeaData?.temp)
         updateUIWeatherData()
         
         
@@ -150,7 +151,11 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     
     
     //Write the userEnteredANewCityName Delegate method here:
-    
+    func userEnteredANewCityName(city: String) {
+        let ulr =  WEATHER_URL + "?q=\(city)&appid=\(APP_ID)"
+        print(city)
+        getWeatherData(url: ulr)
+    }
 
     
     //Write the PrepareForSegue Method here
