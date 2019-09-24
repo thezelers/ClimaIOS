@@ -104,7 +104,8 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
         if let currcond = currWeaData?.condition, let currcity = currWeaData?.ciudad, let currtemp = currWeaData?.temp{
             weatherIcon.image=UIImage(named:currcond)
             cityLabel.text=currcity
-            temperatureLabel.text = String(format: "%.0f", currtemp)
+            let temperature = String(format: "%.0f", currtemp)+"º"
+            temperatureLabel.text = temperature
             
         }
       
