@@ -102,10 +102,12 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
     
     func updateUIWeatherData(){
         if let currcond = currWeaData?.condition, let currcity = currWeaData?.ciudad, let currtemp = currWeaData?.temp{
+            if currtemp > -273{
             weatherIcon.image=UIImage(named:currcond)
             cityLabel.text=currcity
             let temperature = String(format: "%.1f", currtemp)+"º"
             temperatureLabel.text = temperature
+            }
             
         }
       

@@ -37,7 +37,7 @@ class ChangeCityViewController: UIViewController {
         
         //2 If we have a delegate set, call the method userEnteredANewCityName
         if !cityTxt.isEmpty{
-            let change = cityTxt.replacingOccurrences(of: " ", with: "")
+            let change = cityTxt.replacingOccurrences(of: " ", with: "%20")
             delUnw.userEnteredANewCityName(city: change)
         
         
