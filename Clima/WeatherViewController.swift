@@ -57,7 +57,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
     
     //Write the getWeatherData method here:
     func getWeatherData(url : String) {
-        print(url)
+       // print(url)
         Alamofire.request(url, method: .get, encoding: JSONEncoding.default, headers: nil).responseJSON { (respuesta) in
             respuesta.result.ifSuccess{
                 if let data =  respuesta.data{
@@ -85,8 +85,8 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
     func updateWeatherData(response: Data){
         let json = try! JSON(data: response)
         currWeaData = WeatherDataModel(ciudad: json["name"].stringValue, temp: json["main"]["temp"].doubleValue-273, condition: json["weather"][0]["id"].intValue)
-      	print(json)
-        print(currWeaData?.temp)
+      	//print(json)
+        //print(currWeaData?.temp)
         updateUIWeatherData()
         
         
@@ -130,7 +130,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
             else {
                 return
         }
-       print(location)
+      // print(location)
         
         if localitatio.horizontalAccuracy > 0{
             locmang.stopUpdatingLocation()
@@ -147,6 +147,9 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Ha fallao")
+        cityLabel.text="GPS Error"
+        let temperature = ""
+        temperatureLabel.text = temperature
     }
     
 
@@ -158,7 +161,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
     //Write the userEnteredANewCityName Delegate method here:
     func userEnteredANewCityName(city: String) {
         let ulr =  WEATHER_URL + "?q=\(city)&appid=\(APP_ID)"
-        print(city)
+       // print(city)
         getWeatherData(url: ulr)
     }
 
